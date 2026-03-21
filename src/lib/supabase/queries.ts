@@ -1,5 +1,5 @@
 import { query, transaction } from "@/lib/database/client";
-import { deleteImage } from "@/lib/supabase/storage";
+// Template system is now fully dynamic using template_config
 // Template system is now fully dynamic using template_config
 
 // Retry utility with exponential backoff
@@ -407,17 +407,7 @@ export async function updateLinktree(
   id: string,
   data: UpdateLinktreeData
 ): Promise<Linktree> {
-  // If updating image (including setting to null), get the old image path first to delete it later
-  let oldImagePath: string | null = null;
-  if (data.image !== undefined) {
-    const existingResult = await query<{ image: string | null }>(
-      "SELECT image FROM linktrees WHERE id = $1",
-      [id]
-    );
-    if (existingResult.rows.length > 0) {
-      oldImagePath = existingResult.rows[0]?.image || null;
-    }
-  }
+  // Image deletion omitted to keep old images preserving existing links
 
   // Build UPDATE query dynamically
   const updateFields: string[] = [];

@@ -320,9 +320,28 @@ export const BasicInfoStep = memo(function BasicInfoStep({
       {/* Background Color */}
       <div className="space-y-1.5">
         <label className="block text-xs sm:text-sm font-medium text-gray-700">
-          ڕەنگی پاشبنەوە
+          ڕەنگی پاشبنەوە <span className="text-xs text-gray-500 font-normal ml-2">(یان ڕەنگێکی خوازراو هەڵبژێرە)</span>
         </label>
-        <div className="grid grid-cols-7 sm:grid-cols-10 md:grid-cols-14 gap-1.5">
+        
+        <div className="grid grid-cols-7 sm:grid-cols-10 md:grid-cols-14 gap-1.5 items-center">
+          {/* Custom Color Picker Button */}
+          <label 
+            className={`relative h-8 w-full overflow-hidden rounded-md border-2 transition-all duration-200 cursor-pointer flex items-center justify-center bg-[conic-gradient(at_top_right,_var(--tw-gradient-stops))] from-red-500 via-yellow-500 to-blue-500 shadow-md ${
+              backgroundColor.startsWith('#') 
+                ? "border-red-600 scale-110 ring-2 ring-red-600/50 shadow-lg shadow-red-600/30 z-10"
+                : "border-gray-300 hover:border-gray-400 hover:scale-105"
+            }`}
+            title="ڕەنگی خوازراو هەڵبژێرە (Custom Color)"
+          >
+            <input 
+              type="color"
+              value={backgroundColor.startsWith('#') ? backgroundColor : (BACKGROUND_COLORS.find(c => c.id === backgroundColor)?.value || '#ffffff')}
+              onChange={(e) => onBackgroundColorChange(e.target.value)}
+              onBlur={onBackgroundColorBlur}
+              className="absolute inset-0 opacity-0 cursor-pointer w-full h-full"
+            />
+          </label>
+
           {BACKGROUND_COLORS.map((color) => (
             <ColorButton
               key={color.id}

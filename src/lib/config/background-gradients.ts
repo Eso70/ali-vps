@@ -107,5 +107,17 @@ export const DEFAULT_BACKGROUND_COLOR = "#6366f1";
  */
 export function getBackgroundGradient(hexColor?: string | null): BackgroundGradient {
   const color = hexColor || DEFAULT_BACKGROUND_COLOR;
-  return BACKGROUND_GRADIENTS[color] || BACKGROUND_GRADIENTS[DEFAULT_BACKGROUND_COLOR];
+  
+  // Return predefined gradient if it exists
+  if (BACKGROUND_GRADIENTS[color]) {
+    return BACKGROUND_GRADIENTS[color];
+  }
+  
+  // Support valid custom hex colors as a solid background instead of falling back to default
+  if (/^#([0-9A-F]{3}){1,2}$/i.test(color)) {
+    return { from: color, via: color, to: color, isSolid: true };
+  }
+  
+  // Fallback to default
+  return BACKGROUND_GRADIENTS[DEFAULT_BACKGROUND_COLOR];
 }

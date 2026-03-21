@@ -167,7 +167,7 @@ export const PaperCutTemplate = memo(function PaperCutTemplate({
             </div>
           ) : (
             links.map((link, index) => {
-              const icon = getPlatformIcon(link.platform, "w-5 h-5 sm:w-6 sm:h-6 md:w-7 md:h-7 text-orange-600");
+              const icon = getPlatformIcon(link.platform, "w-5 h-5 sm:w-6 sm:h-6 md:w-7 md:h-7 text-orange-600", (link.metadata as Record<string, string>)?.custom_icon);
               const label = link.display_name || getPlatformName(link.platform);
               const rotation = linkRotations[index] || 0;
 

@@ -52,7 +52,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="ku" dir="rtl">
+    <html lang="ku" dir="rtl" suppressHydrationWarning>
       <head>
         <link rel="dns-prefetch" href="https://analytics.tiktok.com" />
         <link rel="preconnect" href="https://analytics.tiktok.com" crossOrigin="anonymous" />
@@ -67,7 +67,7 @@ export default function RootLayout({
         {/* Browser compatibility meta tags */}
         <meta httpEquiv="X-UA-Compatible" content="IE=edge" />
       </head>
-      <body className="antialiased">
+      <body className="antialiased" suppressHydrationWarning>
         <div 
           data-theme-background
           className="relative min-h-screen w-full overflow-hidden text-white"

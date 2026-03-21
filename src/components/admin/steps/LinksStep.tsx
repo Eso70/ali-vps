@@ -4,6 +4,9 @@ import { memo, useMemo, useCallback } from "react";
 import { X, Plus, ChevronUp, ChevronDown } from "lucide-react";
 import { SOCIAL_PLATFORMS, getPlatformNameKurdish } from "../modal-constants";
 import { CountrySelector } from "@/components/ui/CountrySelector";
+import { IconPicker } from "@/components/ui/IconPicker";
+import { CUSTOM_ICONS_MAP } from "@/lib/config/icons";
+import React from "react";
 
 interface SocialLink {
   id: string;
@@ -12,6 +15,8 @@ interface SocialLink {
   value?: string;
   countryCode?: string;
   displayName?: string;
+  customColor?: string;
+  customIcon?: string;
   enabled: boolean;
   order?: number;
 }
@@ -23,10 +28,14 @@ interface LinkItemProps {
   currentValue: string;
   countryCode?: string;
   displayName?: string;
+  customColor?: string;
+  customIcon?: string;
   error?: string;
   onUpdate: (id: string, value: string) => void;
   onUpdateCountryCode: (id: string, countryCode: string) => void;
   onUpdateDisplayName: (id: string, displayName: string) => void;
+  onUpdateCustomColor: (id: string, customColor: string) => void;
+  onUpdateCustomIcon: (id: string, customIcon: string) => void;
   onRemove: (id: string) => void;
   onAdd: (platformId: string) => void;
   onMoveUp?: () => void;
@@ -42,10 +51,14 @@ const LinkItem = memo(function LinkItem({
   currentValue,
   countryCode,
   displayName,
+  customColor,
+  customIcon,
   error,
   onUpdate,
   onUpdateCountryCode,
   onUpdateDisplayName,
+  onUpdateCustomColor,
+  onUpdateCustomIcon,
   onRemove,
   onAdd,
   onMoveUp,
@@ -72,6 +85,10 @@ const LinkItem = memo(function LinkItem({
     const kurdishName = getPlatformNameKurdish(platform.id);
     onUpdateDisplayName(linkId, kurdishName);
   }, [linkId, platform.id, onUpdateDisplayName]);
+
+  const handleCustomColorChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    onUpdateCustomColor(linkId, e.target.value);
+  }, [linkId, onUpdateCustomColor]);
 
   const handleRemove = useCallback(() => {
     onRemove(linkId);
@@ -139,9 +156,26 @@ const LinkItem = memo(function LinkItem({
       )}
       
       <div className="flex items-center gap-2 sm:gap-3 w-full">
-        <div className={`p-2 sm:p-3 md:p-4 rounded-lg sm:rounded-xl bg-gradient-to-br ${platform.color} flex-shrink-0`}>
-          <Icon className="h-4 w-4 sm:h-5 sm:w-5 md:h-6 md:w-6 text-white" />
-        </div>
+        {/* Custom Color Background overlay or just static icon container */}
+        <IconPicker
+          value={customIcon || ""}
+          onChange={(icon) => onUpdateCustomIcon(linkId, icon)}
+          customTrigger={
+            <div 
+              className={`p-2 sm:p-3 md:p-4 rounded-lg sm:rounded-xl bg-gradient-to-br flex-shrink-0 relative overflow-hidden`}
+              style={customColor ? { background: customColor } : { background: 'var(--tw-gradient-from)' }}
+            >
+              {/* We apply the custom color as plain background style, or default to gradients */}
+              {!customColor && <div className={`absolute inset-0 bg-gradient-to-br ${platform.color}`} />}
+              {/* If customIcon is provided, render it instead of the default icon */}
+              {customIcon && CUSTOM_ICONS_MAP[customIcon] ? (
+                React.createElement(CUSTOM_ICONS_MAP[customIcon], { className: "h-4 w-4 sm:h-5 sm:w-5 md:h-6 md:w-6 text-white relative z-10" })
+              ) : (
+                <Icon className="h-4 w-4 sm:h-5 sm:w-5 md:h-6 md:w-6 text-white relative z-10" />
+              )}
+            </div>
+          }
+        />
         <div className="flex flex-col gap-2 flex-1 w-full">
           {/* URL/Phone Input Row */}
           <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 w-full">
@@ -177,8 +211,20 @@ const LinkItem = memo(function LinkItem({
             />
           </div>
           
-          {/* Display Name Input Row */}
+          {/* Display Name and Color Customization Input Row */}
           <div className="flex items-center gap-2 w-full">
+            <div className="relative flex-shrink-0 w-10 h-10 sm:w-11 sm:h-11 md:w-12 md:h-12 lg:h-12 overflow-hidden rounded-lg sm:rounded-xl md:rounded-2xl border border-gray-300 hover:border-gray-400 focus-within:ring-2 focus-within:ring-red-500/30 transition-all cursor-pointer shadow-sm group">
+              <input 
+                type="color"
+                value={customColor || "#000000"}
+                onChange={handleCustomColorChange}
+                title="ڕەنگی دوگمە"
+                className="absolute inset-[0px] cursor-pointer appearance-none border-none bg-transparent w-[200%] h-[200%] -top-2 -left-2"
+              />
+              {!customColor && (
+                 <div className="pointer-events-none absolute inset-0 flex items-center justify-center bg-gray-50 text-[10px] sm:text-xs text-gray-500 font-bold group-hover:bg-gray-100 transition-colors">ڕەنگ</div>
+              )}
+            </div>
             <input
               type="text"
               value={displayName || ""}
@@ -212,6 +258,8 @@ interface LinksStepProps {
   onUpdateLink: (id: string, value: string) => void;
   onUpdateCountryCode: (id: string, countryCode: string) => void;
   onUpdateDisplayName: (id: string, displayName: string) => void;
+  onUpdateCustomColor: (id: string, customColor: string) => void;
+  onUpdateCustomIcon: (id: string, customIcon: string) => void;
   onRemoveLink: (id: string) => void;
   onAddPlatformInstance: (platformId: string) => void;
   onMoveLink: (linkId: string, direction: 'up' | 'down') => void;
@@ -226,6 +274,8 @@ export const LinksStep = memo(function LinksStep({
   onUpdateLink,
   onUpdateCountryCode,
   onUpdateDisplayName,
+  onUpdateCustomColor,
+  onUpdateCustomIcon,
   onRemoveLink,
   onAddPlatformInstance,
   onMoveLink,
@@ -285,10 +335,14 @@ export const LinksStep = memo(function LinksStep({
               currentValue={currentValue}
               countryCode={link.countryCode || "964"}
               displayName={link.displayName}
+              customColor={link.customColor}
+              customIcon={link.customIcon}
               error={linkError}
               onUpdate={onUpdateLink}
               onUpdateCountryCode={onUpdateCountryCode}
               onUpdateDisplayName={onUpdateDisplayName}
+              onUpdateCustomColor={onUpdateCustomColor}
+              onUpdateCustomIcon={onUpdateCustomIcon}
               onRemove={onRemoveLink}
               onAdd={onAddPlatformInstance}
               onMoveUp={() => onMoveLink(linkId, 'up')}

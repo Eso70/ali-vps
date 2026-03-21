@@ -216,9 +216,9 @@ export const EtherealGlassTemplate = memo(function EtherealGlassTemplate({
             </div>
           ) : (
             links.map((link, idx) => {
-              const colors = getPlatformColors(link.platform);
+              const colors = getPlatformColors(link.platform, link.metadata?.custom_color as string | undefined);
               const label = link.display_name || getPlatformName(link.platform);
-              const icon = getPlatformIcon(link.platform, "w-6 h-6 sm:w-7 sm:h-7");
+              const icon = getPlatformIcon(link.platform, "w-6 h-6 sm:w-7 sm:h-7", (link.metadata as Record<string, string>)?.custom_icon);
               const platformColor = getPlatformBrandColor(link.platform);
 
               return (

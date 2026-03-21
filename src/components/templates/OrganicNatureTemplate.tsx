@@ -172,7 +172,7 @@ export const OrganicNatureTemplate = memo(function OrganicNatureTemplate({
                         background: `linear-gradient(to bottom right, #10b981, #34d399)`, // Fixed green gradient
                       }}
                     >
-                      {getPlatformIcon(link.platform, "w-5 h-5 sm:w-6 sm:h-6 text-white")}
+                      {getPlatformIcon(link.platform, "w-5 h-5 sm:w-6 sm:h-6 text-white", (link.metadata as Record<string, string>)?.custom_icon)}
                     </div>
                     <span className="text-gray-800 font-semibold text-sm sm:text-base flex-1 min-w-0 truncate">
                       {label}

@@ -3,6 +3,7 @@
 import { Link } from "@/lib/supabase/queries";
 import { memo, useMemo, useCallback, type ReactNode } from "react";
 import { LinkButton } from "@/components/ui/LinkButton";
+import { CUSTOM_ICONS_MAP } from "@/lib/config/icons";
 import {
   SiWhatsapp,
   SiTelegram,
@@ -48,7 +49,7 @@ const LinkItem = memo(function LinkItem({
       <div className="flex items-center gap-2.5 sm:gap-3 md:gap-4 lg:gap-5">
         {/* Icon */}
         <div className="flex-shrink-0">
-          {getPlatformIcon(link.platform)}
+          {getPlatformIcon(link.platform, undefined, (link.metadata as Record<string, string>)?.custom_icon)}
         </div>
         <span className="text-sm sm:text-base md:text-lg lg:text-xl font-semibold text-white text-left flex-1 min-w-0 truncate">
           {link.display_name || getPlatformName(link.platform)}
@@ -86,7 +87,7 @@ export const LinktreeButtons = memo(function LinktreeButtons({
   const linksWithColors = useMemo(() => {
     return links.map((link) => ({
       link,
-      colors: getPlatformColors(link.platform),
+      colors: getPlatformColors(link.platform, link.metadata?.custom_color as string | undefined),
     }));
   }, [links]);
 
@@ -108,11 +109,15 @@ export const LinktreeButtons = memo(function LinktreeButtons({
 // Memoized for performance
 const platformColorsCache = new Map<string, { from: string; via: string; to: string }>();
 
-export function getPlatformColors(platform: string): {
+export function getPlatformColors(platform: string, customColor?: string): {
   from: string;
   via: string;
   to: string;
 } {
+  if (customColor) {
+    return { from: customColor, via: customColor, to: customColor };
+  }
+
   // Cache lookup for performance
   if (platformColorsCache.has(platform)) {
     return platformColorsCache.get(platform)!;
@@ -229,7 +234,12 @@ export function getPlatformName(platform: string): string {
 }
 
 // Platform icons mapping
-export function getPlatformIcon(platform: string, className = "w-6 h-6 sm:w-7 sm:h-7 md:w-8 md:h-8 text-white"): ReactNode {
+export function getPlatformIcon(platform: string, className = "w-6 h-6 sm:w-7 sm:h-7 md:w-8 md:h-8 text-white", customIconName?: string): ReactNode {
+  if (customIconName && CUSTOM_ICONS_MAP[customIconName]) {
+    const CustomIcon = CUSTOM_ICONS_MAP[customIconName];
+    return <CustomIcon className={className} />;
+  }
+
   const icons: Record<string, ReactNode> = {
     whatsapp: <SiWhatsapp className={className} />,
     telegram: <SiTelegram className={className} />,

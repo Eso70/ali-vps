@@ -200,7 +200,7 @@ const linktreeBaseSchema = z.object({
     )
     .optional()
     .nullable(),
-  background_color: z.enum(BACKGROUND_COLORS),
+  background_color: z.string().min(1).max(50),
   footer_text: z.string().max(200).optional().nullable(),
   footer_phone: z
     .string()
@@ -245,7 +245,7 @@ export const updateLinktreeSchema = linktreeBaseSchema.partial().extend({
     .regex(/^[a-z0-9-]+$/, "Slug must contain only lowercase letters, numbers, and hyphens")
     .trim()
     .optional(),
-  background_color: z.enum(BACKGROUND_COLORS).optional(),
+  background_color: z.string().min(1).max(50).optional(),
   template_key: templateKeySchema.optional(),
 });
 
@@ -272,8 +272,8 @@ export const editDataResponseSchema = z.object({
     footer_text: z.string().nullable().optional(),
     footer_phone: z.string().nullable().optional(),
     template_config: z.record(z.string(), z.unknown()).nullable().optional(),
-    created_at: z.string().min(1),
-    updated_at: z.string().min(1),
+    created_at: z.union([z.string(), z.date()]),
+    updated_at: z.union([z.string(), z.date()]),
   }),
   links: z.array(
     z.object({

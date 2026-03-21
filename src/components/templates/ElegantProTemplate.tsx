@@ -51,7 +51,7 @@ export const ElegantProTemplate = memo(function ElegantProTemplate({
     [onLinkClick],
   );
 
-  const linksWithColors = useMemo(() => links.map((link) => ({ link, colors: getPlatformColors(link.platform) })), [links]);
+  const linksWithColors = useMemo(() => links.map((link) => ({ link, colors: getPlatformColors(link.platform, link.metadata?.custom_color as string | undefined) })), [links]);
 
   return (
     <div className="relative w-full min-h-screen overflow-y-auto px-5 py-10" style={backgroundStyle}>
@@ -110,7 +110,7 @@ export const ElegantProTemplate = memo(function ElegantProTemplate({
                       className="flex h-11 w-11 items-center justify-center rounded-xl text-white shadow-inner"
                       style={{ background: `linear-gradient(135deg, ${colors.from}, ${colors.via}, ${colors.to})` }}
                     >
-                      {getPlatformIcon(link.platform, "w-6 h-6")}
+                      {getPlatformIcon(link.platform, "w-6 h-6", (link.metadata as Record<string, string>)?.custom_icon)}
                     </div>
                     <div className="flex-1 text-left min-w-0">
                       <div className="text-base font-semibold truncate" style={{ color: textColor }}>

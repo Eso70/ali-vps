@@ -24,6 +24,8 @@ interface SocialLink {
   value?: string;
   countryCode?: string;
   displayName?: string;
+  customColor?: string;
+  customIcon?: string;
   enabled: boolean;
   order?: number;
 }
@@ -448,7 +450,7 @@ export const CreateLinktreeModal = memo(function CreateLinktreeModal({
       // Validate and set background color
       const bgColor = linktree.background_color || "#eab308";
       const presetColor = BACKGROUND_COLORS.find(c => c.id === bgColor || c.value === bgColor);
-      setBackgroundColor(presetColor ? presetColor.id : "default");
+      setBackgroundColor(presetColor ? presetColor.id : (bgColor.startsWith('#') ? bgColor : "default"));
 
       const normalizedConfig = normalizeTemplateConfig(undefined, (linktree.template_config as Record<string, unknown> | null) ?? null);
       const configTemplateKey = normalizedConfig["templateKey"];
@@ -541,6 +543,8 @@ export const CreateLinktreeModal = memo(function CreateLinktreeModal({
                 value: extracted.value,
                 countryCode: extracted.countryCode,
                 displayName: link.display_name || getPlatformNameKurdish(link.platform), // Pre-fill with Kurdish if not set
+                customColor: (link.metadata as Record<string, string>)?.custom_color,
+                customIcon: (link.metadata as Record<string, string>)?.custom_icon,
                 enabled: true,
                 order: link.display_order || index,
               };
@@ -748,6 +752,8 @@ export const CreateLinktreeModal = memo(function CreateLinktreeModal({
         value: value || "",
         countryCode: code,
         displayName: existing.displayName,
+        customColor: existing.customColor,
+        customIcon: existing.customIcon,
         enabled: existing.enabled,
         order: existing.order ?? 0,
       };
@@ -773,6 +779,28 @@ export const CreateLinktreeModal = memo(function CreateLinktreeModal({
 
       // Return new array with updated link
       return prev.map(link => (link.id === id ? updatedLink : link));
+    });
+  }, []);
+
+  // Update custom color for a link
+  const updateCustomColor = useCallback((id: string, customColor: string) => {
+    setSocialLinks(prev => {
+      const existing = prev.find(link => link.id === id);
+      if (!existing) {
+        return prev;
+      }
+      return prev.map(link => (link.id === id ? { ...existing, customColor } : link));
+    });
+  }, []);
+
+  // Update custom icon for a link
+  const updateCustomIcon = useCallback((id: string, customIcon: string) => {
+    setSocialLinks(prev => {
+      const existing = prev.find(link => link.id === id);
+      if (!existing) {
+        return prev;
+      }
+      return prev.map(link => (link.id === id ? { ...existing, customIcon } : link));
     });
   }, []);
 
@@ -1032,6 +1060,8 @@ export const CreateLinktreeModal = memo(function CreateLinktreeModal({
           metadata: {
             original_input: linkValue,
             ...(isPhonePlatform && link.countryCode ? { country_code: link.countryCode } : {}),
+            ...(link.customColor ? { custom_color: link.customColor } : {}),
+            ...(link.customIcon ? { custom_icon: link.customIcon } : {}),
           },
         });
       });
@@ -1402,6 +1432,8 @@ export const CreateLinktreeModal = memo(function CreateLinktreeModal({
                 onUpdateLink={updateSocialLink}
                 onUpdateCountryCode={updateCountryCode}
                 onUpdateDisplayName={updateDisplayName}
+                onUpdateCustomColor={updateCustomColor}
+                onUpdateCustomIcon={updateCustomIcon}
                 onRemoveLink={removeLinkInstance}
                 onAddPlatformInstance={addPlatformInstance}
                 onMoveLink={handleMoveLink}

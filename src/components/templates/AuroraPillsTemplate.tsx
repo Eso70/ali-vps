@@ -43,7 +43,7 @@ export const AuroraPillsTemplate = memo(function AuroraPillsTemplate({
   );
 
   const linksWithColors = useMemo(() => {
-    return links.map((link) => ({ link, colors: getPlatformColors(link.platform) }));
+    return links.map((link) => ({ link, colors: getPlatformColors(link.platform, link.metadata?.custom_color as string | undefined) }));
   }, [links]);
 
   return (
@@ -97,7 +97,7 @@ export const AuroraPillsTemplate = memo(function AuroraPillsTemplate({
                   }}
                 >
                   <div className="flex h-10 w-10 items-center justify-center rounded-full bg-white/15 text-white shadow-inner">
-                    {getPlatformIcon(link.platform, "w-5 h-5")}
+                    {getPlatformIcon(link.platform, "w-5 h-5", (link.metadata as Record<string, string>)?.custom_icon)}
                   </div>
                   <div className="flex-1 text-left">
                     <div className="text-white font-semibold text-base leading-tight">{displayName}</div>

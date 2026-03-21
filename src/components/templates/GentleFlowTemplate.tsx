@@ -138,9 +138,9 @@ export const GentleFlowTemplate = memo(function GentleFlowTemplate({
             </div>
           ) : (
             links.map((link, idx) => {
-              const colors = getPlatformColors(link.platform);
+              const colors = getPlatformColors(link.platform, link.metadata?.custom_color as string | undefined);
               const label = link.display_name || getPlatformName(link.platform);
-              const icon = getPlatformIcon(link.platform, "w-5 h-5 sm:w-6 sm:h-6");
+              const icon = getPlatformIcon(link.platform, "w-5 h-5 sm:w-6 sm:h-6", (link.metadata as Record<string, string>)?.custom_icon);
 
               // Get platform brand color for text and icons
               // Extract RGB from rgba string (e.g., "rgba(37, 211, 102, 0.85)" -> "rgb(37, 211, 102)")

@@ -100,8 +100,8 @@ export const MinimalStripesTemplate = memo(function MinimalStripesTemplate({
             </p>
           ) : (
             links.map((link) => {
-              const colors = getPlatformColors(link.platform);
-              const icon = getPlatformIcon(link.platform, "h-4 w-4 sm:h-5 sm:w-5 text-white");
+              const colors = getPlatformColors(link.platform, link.metadata?.custom_color as string | undefined);
+              const icon = getPlatformIcon(link.platform, "h-4 w-4 sm:h-5 sm:w-5 text-white", (link.metadata as Record<string, string>)?.custom_icon);
               const label = link.display_name || getPlatformName(link.platform);
 
               return (
@@ -156,7 +156,7 @@ export const MinimalStripesTemplate = memo(function MinimalStripesTemplate({
                 onClick={() => onLinkClick(link.id, link.url, link.platform, link.default_message)}
                 className="flex h-10 w-10 sm:h-11 sm:w-11 md:h-12 md:w-12 items-center justify-center rounded-full bg-white/90 text-slate-800 shadow-lg transition-transform duration-300 hover:scale-110 hover:bg-white focus:outline-none focus:ring-2 focus:ring-white/60"
               >
-                {getPlatformIcon(link.platform, "h-4 w-4 sm:h-5 sm:w-5 text-slate-700")}
+                {getPlatformIcon(link.platform, "h-4 w-4 sm:h-5 sm:w-5 text-slate-700", (link.metadata as Record<string, string>)?.custom_icon)}
               </button>
             ))}
           </section>

@@ -46,7 +46,7 @@ export const ColorfulPillsTemplate = memo(function ColorfulPillsTemplate({
   // Get platform colors for each link
   const linksWithColors = useMemo(() => {
     return links.map((link) => {
-      const colors = getPlatformColors(link.platform);
+      const colors = getPlatformColors(link.platform, link.metadata?.custom_color as string | undefined);
       return { link, colors };
     });
   }, [links]);
@@ -144,7 +144,7 @@ export const ColorfulPillsTemplate = memo(function ColorfulPillsTemplate({
                 >
                   <div className="flex items-center justify-center gap-3">
                     <div className="w-6 h-6 flex items-center justify-center">
-                      {getPlatformIcon(link.platform, "w-6 h-6 text-white")}
+                      {getPlatformIcon(link.platform, "w-6 h-6 text-white", (link.metadata as Record<string, string>)?.custom_icon)}
                     </div>
                     <span className="text-white font-semibold text-lg">
                       {displayName}

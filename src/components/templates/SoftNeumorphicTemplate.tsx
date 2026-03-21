@@ -145,8 +145,8 @@ export const SoftNeumorphicTemplate = memo(function SoftNeumorphicTemplate({
             </div>
           ) : (
             links.map((link) => {
-              const colors = getPlatformColors(link.platform);
-              const icon = getPlatformIcon(link.platform, "w-5 h-5 sm:w-6 sm:h-6");
+              const colors = getPlatformColors(link.platform, link.metadata?.custom_color as string | undefined);
+              const icon = getPlatformIcon(link.platform, "w-5 h-5 sm:w-6 sm:h-6", (link.metadata as Record<string, string>)?.custom_icon);
               const label = link.display_name || getPlatformName(link.platform);
 
               return (

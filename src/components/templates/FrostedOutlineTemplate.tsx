@@ -45,8 +45,8 @@ export const FrostedOutlineTemplate = memo(function FrostedOutlineTemplate({
             </div>
           ) : (
             links.map((link, idx) => {
-              const colors = getPlatformColors(link.platform);
-              const icon = getPlatformIcon(link.platform, "w-6 h-6");
+              const colors = getPlatformColors(link.platform, link.metadata?.custom_color as string | undefined);
+              const icon = getPlatformIcon(link.platform, "w-6 h-6", (link.metadata as Record<string, string>)?.custom_icon);
               const label = link.display_name || getPlatformName(link.platform);
 
               return (

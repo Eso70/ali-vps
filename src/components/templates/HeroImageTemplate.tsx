@@ -189,7 +189,7 @@ export const HeroImageTemplate = memo(function HeroImageTemplate({
           {iconLinks.length > 0 && (
             <div className="flex justify-center items-center gap-5 sm:gap-7 md:gap-8 flex-wrap mb-16" dir="ltr">
               {iconLinks.map((link) => {
-                const icon = getPlatformIcon(link.platform, "w-9 h-9 sm:w-10 sm:h-10 md:w-11 md:h-11");
+                const icon = getPlatformIcon(link.platform, "w-9 h-9 sm:w-10 sm:h-10 md:w-11 md:h-11", (link.metadata as Record<string, string>)?.custom_icon);
                 const platformColor = getPlatformBrandColor(link.platform);
                 const isDarkPlatform = link.platform === "twitter" || link.platform === "x" || link.platform === "tiktok";
                 const shadowColor = isWhiteBackground ? 'rgba(0, 0, 0, 0.2)' : 'rgba(0, 0, 0, 0.4)';
@@ -225,7 +225,7 @@ export const HeroImageTemplate = memo(function HeroImageTemplate({
             <div className="space-y-3 mb-24" dir="ltr">
               {remainingLinks.map((link, idx) => {
                 const label = link.display_name || getPlatformName(link.platform);
-                const icon = getPlatformIcon(link.platform, "w-5 h-5 sm:w-6 sm:h-6");
+                const icon = getPlatformIcon(link.platform, "w-5 h-5 sm:w-6 sm:h-6", (link.metadata as Record<string, string>)?.custom_icon);
                 const platformColor = getPlatformBrandColor(link.platform);
                 const isDarkPlatform = link.platform === "twitter" || link.platform === "x" || link.platform === "tiktok";
 

@@ -122,8 +122,8 @@ export const SmartbioTemplate = memo(function SmartbioTemplate({
         {socialLinks.length > 0 && (
           <div className="flex items-center justify-center gap-3 sm:gap-4 md:gap-5 mb-4 sm:mb-5 md:mb-6 px-2" dir="ltr">
             {socialLinks.map((link) => {
-              const icon = getPlatformIcon(link.platform, "w-5 h-5 sm:w-6 sm:h-6 md:w-7 md:h-7 text-white");
-              const colors = getPlatformColors(link.platform);
+              const icon = getPlatformIcon(link.platform, "w-5 h-5 sm:w-6 sm:h-6 md:w-7 md:h-7 text-white", (link.metadata as Record<string, string>)?.custom_icon);
+              const colors = getPlatformColors(link.platform, link.metadata?.custom_color as string | undefined);
               return (
                 <button
                   key={link.id}
@@ -198,8 +198,8 @@ export const SmartbioTemplate = memo(function SmartbioTemplate({
           {allLinks.map((link, index) => {
             const platformName = getPlatformName(link.platform);
             const label = link.display_name || platformName;
-            const colors = getPlatformColors(link.platform);
-            const icon = getPlatformIcon(link.platform, "w-5 h-5 sm:w-6 sm:h-6 md:w-7 md:h-7 text-white");
+            const colors = getPlatformColors(link.platform, link.metadata?.custom_color as string | undefined);
+            const icon = getPlatformIcon(link.platform, "w-5 h-5 sm:w-6 sm:h-6 md:w-7 md:h-7 text-white", (link.metadata as Record<string, string>)?.custom_icon);
 
             return (
               <button

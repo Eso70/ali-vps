@@ -179,8 +179,8 @@ export const TerminalTemplate = memo(function TerminalTemplate({
               </div>
             ) : (
               links.map((link, index) => {
-                const colors = getPlatformColors(link.platform);
-                const icon = getPlatformIcon(link.platform, "w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6");
+                const colors = getPlatformColors(link.platform, link.metadata?.custom_color as string | undefined);
+                const icon = getPlatformIcon(link.platform, "w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6", (link.metadata as Record<string, string>)?.custom_icon);
                 const platformName = getPlatformName(link.platform);
                 const label = link.display_name || platformName;
 
